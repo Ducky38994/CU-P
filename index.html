@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BP Currency System - Cool Vibes</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+        /* Root and theme colors */
+        :root {
+            --bg-dark: #0f111a;
+            --bg-darker: #080a12;
+            --primary-gradient: linear-gradient(135deg, #7f53ac 0%, #647dee 100%);
+            --secondary-gradient: linear-gradient(135deg, #f81ce5 0%, #6a11cb 100%);
+            --accent-color: #ee82ee;
+            --text-light: #e0e0ff;
+            --text-muted: #a0a0c0;
+            --btn-bg: #1e213a;
+            --btn-hover-bg: #644de2;
+            --shadow-glow: rgba(111, 111, 236, 0.5);
+            --border-radius: 12px;
+        }
+
+        /* Reset and base styles */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            font-family: 'Poppins', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 10px;
+            user-select: none;
+        }
+
+        .title {
+            font-size: 3rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px var(--shadow-glow);
+            letter-spacing: 2px;
+        }
+
+        /* Navigation bar */
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .nav button {
+            background: var(--btn-bg);
+            border: none;
+            color: var(--text-light);
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 12px 25px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            box-shadow: 0 0 8px transparent;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            user-select: none;
+        }
+
+        .nav button img,
+        .nav button svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .nav button:hover,
+        .nav button:focus {
+            background: var(--btn-hover-bg);
+            outline: none;
+            box-shadow: 0 0 15px var(--shadow-glow);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .nav button.active {
+            background: var(--secondary-gradient);
+            box-shadow: 0 0 20px var(--shadow-glow);
+            cursor: default;
+            transform: scale(1.05);
+            color: #fff;
+        }
+
+        /* Container holding the content tabs */
+        .container {
+            width: 100%;
+            max-width: 740px;
+            background: var(--bg-darker);
+            border-radius: var(--border-radius);
+            padding: 25px 30px;
+            box-shadow: 0 0 30px rgba(99, 71, 123, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Tabs */
+        .tab {
+            display: none;
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        .tab.active {
+            display: block;
+        }
+
+        /* Sections */
+        .section {
+            background: linear-gradient(145deg, #151724, #1c2050);
+            padding: 20px 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 0 25px rgba(111, 111, 236, 0.3);
+            border: 1px solid rgba(99, 71, 123, 0.6);
+            margin-bottom: 30px;
+        }
+
+        /* Subtitles */
+        .subtitle {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+            background: var(--primary-gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            user-select: none;
+        }
+
+        /* Pixel style text */
+        .pixel {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.15rem;
+            letter-spacing: 1.2px;
+            margin-bottom: 12px;
+            color: var(--text-light);
+            user-select: text;
+        }
+
+        /* Logs */
+        .log {
+            max-height: 180px;
+            overflow-y: auto;
+            background: rgba(50, 50, 80, 0.75);
+            border-radius: 10px;
+            border: 1px dashed #7f53ac;
+            padding: 10px 15px;
+            font-family: monospace;
+            font-size: 0.95rem;
+            color: #d7caff;
+            box-shadow: 0 0 15px #7733ff44 inset;
+            user-select: auto;
+        }
+
+        /* Inputs and buttons */
+        input[type="number"],
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 14px;
+            margin-top: 6px;
+            font-size: 1rem;
+            border-radius: var(--border-radius);
+            border: 1.8px solid #7f53ac;
+            background: #1c1e44;
+            color: #d7caff;
+            font-family: 'Poppins', sans-serif;
+            transition: border-color 0.3s ease;
+            user-select: text;
+        }
+
+        input[type="number"]:focus,
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #a063f7;
+            box-shadow: 0 0 8px #a063f7aa;
+        }
+
+        button {
+            background: var(--secondary-gradient);
+            border: none;
+            border-radius: var(--border-radius);
+            color: #fff;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 12px 28px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(111, 111, 236, 0.6);
+            transition: all 0.3s ease;
+            user-select: none;
+            margin-top: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            letter-spacing: 0.05em;
+        }
+
+        button:hover,
+        button:focus {
+            background: var(--primary-gradient);
+            box-shadow: 0 0 25px rgba(167, 100, 255, 0.9);
+            transform: translateY(-3px);
+            outline: none;
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        label {
+            display: block;
+            margin-top: 18px;
+            font-weight: 500;
+            user-select: none;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive input group spacing */
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(7px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="title">BP CURRENCY SYSTEM</div>
+
+    <nav class="nav" role="navigation" aria-label="Primary navigation">
+        <button class="active" onclick="switchTab('home')" aria-controls="home" aria-selected="true" role="tab"
+            tabindex="0">
+            🏠 Home
+        </button>
+        <button onclick="switchTab('trade')" aria-controls="trade" aria-selected="false" role="tab" tabindex="-1">
+            📈 Trading
+        </button>
+        <button onclick="switchTab('transfer')" aria-controls="transfer" aria-selected="false" role="tab" tabindex="-1">
+            🔁 Transfer
+        </button>
+        <button onclick="switchTab('income')" aria-controls="income" aria-selected="false" role="tab" tabindex="-1">
+            📊 Income
+        </button>
+        <button onclick="switchTab('expenses')" aria-controls="expenses" aria-selected="false" role="tab" tabindex="-1">
+            📉 Expenses
+        </button>
+    </nav>
+
+    <main class="container">
+        <section class="tab active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="section" aria-label="Balance and Server Fees">
+                <div class="subtitle">💰 Balance & Server Fee</div>
+                <div class="pixel" aria-live="polite" aria-atomic="true">Balance: <span id="balance">3000</span> <img
+                        src="path/to/owo/image.png" alt="BP Symbol" style="vertical-align: middle;" /> </div>
+                <button onclick="payServerFee()" aria-label="Pay Server Fee">Pay Server Fee</button>
+                <div class="pixel" aria-live="polite" aria-atomic="true">
+                    Next Fee Due: <span id="nextFee"></span>
+                </div>
+            </div>
+        </section>
+
+        <section class="tab" id="trade" role="tabpanel" aria-labelledby="trade-tab">
+            <div class="section" aria-label="Trading Section">
+                <div class="subtitle">📈 Trading Section</div>
+
+                <div class="pixel" aria-live="polite" aria-atomic="true">Wheat: <span id="wheatPrice"></span> <img
+                        src="path/to/owo/image.png" alt="BP Symbol" style="vertical-align: middle;" /> /kg
+                </div>
+                <label for="wheatBpInput">Enter BP to spend on Wheat (e.g. enter 100 to spend 100 BP):</label>
+                <input id="wheatBpInput" type="number" min="1" placeholder="BP amount for wheat"
+                    aria-describedby="wheatPrice" />
+                <button onclick="buy('wheat')" aria-label="Buy wheat with specified BP amount">Buy Wheat</button>
+
+                <div class="pixel" style="margin-top: 25px;" aria-live="polite" aria-atomic="true">Wool: <span
+                        id="woolPrice"></span> <img src="path/to/owo/image.png" alt="BP Symbol"
+                        style="vertical-align: middle;" /> /kg</div>
+                <label for="woolBpInput">Enter BP to spend on Wool (e.g. enter 100 to spend 100 BP):</label>
+                <input id="woolBpInput" type="number" min="1" placeholder="BP amount for wool"
+                    aria-describedby="woolPrice" />
+                <button onclick="buy('wool')" aria-label="Buy wool with specified BP amount">Buy Wool</button>
+            </div>
+        </section>
+
+        <section class="tab" id="transfer" role="tabpanel" aria-labelledby="transfer-tab">
+            <div class="section" aria-label="Transfer BP">
+                <div class="subtitle">🔁 Transfer BP</div>
+                <input type="number" id="sendAmount" placeholder="Amount to send" aria-label="Amount of BP to send" />
+                <button onclick="generateCode()" aria-label="Generate transfer code">Generate Code</button>
+                <div class="pixel">Transfer Code: <span id="transferCode"></span></div>
+                <input type="text" id="redeemCode" placeholder="Paste code" aria-label="Paste transfer code here" />
+                <button onclick="redeemCode()" aria-label="Redeem transfer code">Redeem</button>
+            </div>
+        </section>
+
+        <section class="tab" id="income" role="tabpanel" aria-labelledby="income-tab">
+            <div class="section" aria-label="Income Log">
+                <div class="subtitle">📊 Income</div>
+                <div class="log" id="incomeLog" aria-live="polite" aria-atomic="false"></div>
+            </div>
+        </section>
+
+        <section class="tab" id="expenses" role="tabpanel" aria-labelledby="expenses-tab">
+            <div class="section" aria-label="Expense Log">
+                <div class="subtitle">📉 Expenses</div>
+                <div class="log" id="expenseLog" aria-live="polite" aria-atomic="false"></div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function switchTab(id) {
+            // Handle switches of ARIA attributes for accessibility
+            const tabs = document.querySelectorAll('.nav button');
+            tabs.forEach((btn) => {
+                if (btn.getAttribute('aria-controls') === id) {
+                    btn.classList.add('active');
+                    btn.setAttribute('aria-selected', 'true');
+                    btn.tabIndex = 0;
+                } else {
+                    btn.classList.remove('active');
+                    btn.setAttribute('aria-selected', 'false');
+                    btn.tabIndex = -1;
+                }
+            });
+
+            document.querySelectorAll('.tab').forEach((t) => t.classList.remove('active'));
+            const activeTab = document.getElementById(id);
+            activeTab.classList.add('active');
+            activeTab.focus?.();
+        }
+
+        let balance = localStorage.getItem('bp_balance')
+            ? parseFloat(localStorage.getItem('bp_balance'))
+            : 3000;
+        let feeAmount = 50;
+        let codes = JSON.parse(localStorage.getItem('bp_codes') || '{}');
+        let serverFeeDue = new Date(
+            localStorage.getItem('bp_due') || new Date().toISOString()
+        );
+        let missedPayments = 0;
+
+        function saveState() {
+            localStorage.setItem('bp_balance', balance);
+            localStorage.setItem('bp_codes', JSON.stringify(codes));
+            localStorage.setItem('bp_due', serverFeeDue.toISOString());
+        }
+
+        function updateBalanceDisplay() {
+            document.getElementById('balance').textContent = balance.toFixed(0);
+            saveState();
+        }
+
+        function updateNextFeeDisplay() {
+            document.getElementById('nextFee').textContent =
+                serverFeeDue.toDateString() + ` (${feeAmount} BP)`;
+        }
+
+        function logExpense(text) {
+            const expenseLog = document.getElementById('expenseLog');
+            expenseLog.innerHTML += `<div>− ${text}</div>`;
+            expenseLog.scrollTop = expenseLog.scrollHeight;
+        }
+
+        function logIncome(text) {
+            const incomeLog = document.getElementById('incomeLog');
+            incomeLog.innerHTML += `<div>+ ${text}</div>`;
+            incomeLog.scrollTop = incomeLog.scrollHeight;
+        }
+
+        function payServerFee() {
+            if (balance >= feeAmount) {
+                balance -= feeAmount;
+                logExpense(`Server Fee Paid: ${feeAmount} BP`);
+                missedPayments = 0;
+                feeAmount = 50;
+                serverFeeDue.setMonth(serverFeeDue.getMonth() + 1);
+                updateBalanceDisplay();
+                updateNextFeeDisplay();
+                alert('Server fee paid.');
+            } else {
+                alert('Not enough balance.');
+            }
+        }
+
+        function calculateOverdue() {
+            const now = new Date();
+            if (now > serverFeeDue) {
+                const monthsOverdue = Math.floor(
+                    (now - serverFeeDue) / (30 * 24 * 60 * 60 * 1000)
+                );
+                missedPayments = monthsOverdue;
+                let extra = 50 * monthsOverdue;
+                let tax = 0.1 * extra;
+                feeAmount = 50 + extra + tax;
+            }
+        }
+
+        function generateCode() {
+            const amount = parseFloat(document.getElementById('sendAmount').value);
+            if (isNaN(amount) || amount <= 0 || amount > balance) {
+                alert('Invalid amount');
+                return;
+            }
+            const code = Math.random().toString(36).substring(2, 8);
+            codes[code] = amount;
+            balance -= amount;
+            logExpense(`Transfer Sent: ${amount} BP (Code: ${code})`);
+            updateBalanceDisplay();
+            document.getElementById('transferCode').textContent = code;
+            saveState();
+        }
+
+        function redeemCode() {
+            const code = document.getElementById('redeemCode').value.trim();
+            if (codes[code]) {
+                balance += codes[code];
+                logIncome(`Redeemed Code: ${code} (+${codes[code]} BP)`);
+                delete codes[code];
+                updateBalanceDisplay();
+                alert('Code redeemed!');
+            } else {
+                alert('Invalid or used code.');
+            }
+        }
+
+        function randomPrice(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function refreshPrices() {
+            document.getElementById('wheatPrice').textContent = wheatPrice;
+            document.getElementById('woolPrice').textContent = woolPrice;
+        }
+
+        /**
+         * Buy items using BP amount input.
+         * Calculates how many kgs the BP can buy at the current price,
+         * deducts balance accordingly, and logs the purchase.
+         */
+        function buy(item) {
+            let pricePerKg = item === 'wheat' ? wheatPrice : woolPrice;
+            let inputId = item === 'wheat' ? 'wheatBpInput' : 'woolBpInput';
+            let bpAmount = parseFloat(document.getElementById(inputId).value);
+            if (isNaN(bpAmount) || bpAmount <= 0) {
+                alert('Please enter a valid BP amount to spend.');
+                return;
+            }
+            if (bpAmount > balance) {
+                alert('Not enough BP balance to spend that amount.');
+                return;
+            }
+            let quantityKg = bpAmount / pricePerKg;
+            // Round quantity to 2 decimals
+            quantityKg = Math.floor(quantityKg * 100) / 100;
+
+            if (quantityKg <= 0) {
+                alert('BP amount too low to buy any quantity.');
+                return;
+            }
+
+            let cost = quantityKg * pricePerKg; // actual cost, may differ slightly due to rounding
+            balance -= cost;
+            logExpense(
+                `Bought <strong>${quantityKg.toFixed(2)} kg</strong> ${item} for <strong>${cost.toFixed(2)}</strong> BP`
+            );
+            updateBalanceDisplay();
+
+            alert(
+                `Successfully bought ${quantityKg.toFixed(
+                    2
+                )} kg of ${item} for ${cost.toFixed(2)} BP`
+            );
+
+            // Clear input after purchase
+            document.getElementById(inputId).value = '';
+        }
+
+        let wheatPrice = randomPrice(140, 180);
+        let woolPrice = randomPrice(50, 90);
+
+        calculateOverdue();
+        updateBalanceDisplay();
+        updateNextFeeDisplay();
+        refreshPrices();
+    </script>
+</body>
+
+</html>
